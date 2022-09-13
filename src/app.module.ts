@@ -18,6 +18,8 @@ import { UsersModule } from './users/users.module';
         DATABASE_USERNAME: Joi.string().required(),
         DATABASE_PASSWORD: Joi.string().required(),
         DATABASE_NAME: Joi.string().required(),
+        SWAGGER_USER: Joi.string().default('admin'),
+        SWAGGER_PASSWORD: Joi.string().default('1106'),
       }),
     }),
     DatabaseModule,

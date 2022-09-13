@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,5 +23,18 @@ export class UsersService {
       email,
       password: hashedPassword,
     });
+  }
+
+  async findUserBySub(jwtSub: string): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      select: { password: false },
+      where: { id: parseInt(jwtSub), isDeleted: false },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return user;
   }
 }
