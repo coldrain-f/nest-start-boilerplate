@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  CacheModule,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ExampleMiddleware } from './example/example.middleware';
 import { UsersController } from './users/users.controller';
+import * as redisStore from 'cache-manager-ioredis';
 
 @Module({
   imports: [
@@ -24,6 +30,11 @@ import { UsersController } from './users/users.controller';
         SWAGGER_PASSWORD: Joi.string().default('admin'),
         JWT_SECRET_KEY: Joi.string().default('secret'),
       }),
+    }),
+    CacheModule.register({
+      store: redisStore,
+      host: '127.0.0.1',
+      port: 6379,
     }),
     DatabaseModule,
     AuthModule,
